@@ -18,6 +18,9 @@ class Login extends React.Component {
 
     entrar(){
         console.log(this.state)
+        const { navigate } = this.props.navigation
+        navigate('Contatos', {}, action)
+        //navigate('Contatos')
     }
 
     render() {
