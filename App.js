@@ -1,16 +1,35 @@
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
-
-import Login from './src/login/Login'
+import { StyleSheet, Text, View } from 'react-native'
+import { Provider } from 'react-redux'
+import { applyMiddleware, createStore } from 'redux'
 import Router from './src/main/Router'
+import axios from 'axios'
 
-export default class App extends React.Component {
+import thunk from 'redux-thunk'
+import promise from 'redux-promise'
+
+import reducers from './src/main/reducers'
+
+const store = applyMiddleware(thunk, promise)(createStore)(reducers)
+
+axios.interceptors.response.use(function (response) {
+  return response.data;
+}, function (error) {
+  //   console.log(error);
+  return Promise.reject(error);
+});
+
+class App extends React.Component {
   render() {
     return (
-      <Router/>
+      <Provider store={store}>
+        <Router />
+      </Provider>
     );
   }
 }
+
+export default App
 
 const styles = StyleSheet.create({
   container: {

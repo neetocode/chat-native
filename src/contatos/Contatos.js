@@ -1,31 +1,52 @@
 import React from 'react'
 import { StyleSheet, View, Text } from 'react-native'
+import { Button, List, ListItem } from 'react-native-elements'
 import { NavigationActions } from 'react-navigation'
+import { connect } from 'react-redux'
 
 
 class Contatos extends React.Component {
-    // componentDidMount() {
-    //     const resetAction = NavigationActions.reset({
-    //         index: 0,
-    //         actions: [
-    //             NavigationActions.navigate({ routeName: 'Contatos' }),
-    //             NavigationActions.navigate({ routeName: 'Chat' })
-    //         ]
-    //     })
-    //     this.props.navigation.dispatch(resetAction)
-    // }
+    static navigationOptions ={
+        title: "Contatos"
+    }
+
+    goChat(contato) {
+        const { navigate } = this.props.navigation
+        navigate('chat',{contato})
+    }
+
     render() {
+        const { contatos, ipServer } = this.props
         return (
-            <View style={styles.container}>
-                <Text>Contatos</Text>
+            <View>
+                <List>
+                    {
+                        contatos.map((contato, i) => (
+                            <ListItem
+                                roundAvatar
+                                avatar={{ uri: `${ipServer}/faces/resources/user.png` }}
+                                key={i}
+                                title={contato.nome}
+                                subtitle={contato.online ? "Online" : ""}
+                                subtitleStyle={contato.online ? {color:'green'} : {}}
+                                hideChevron={true}
+                                onPress={()=>this.goChat(contato)}
+                            />
+                        ))
+                    }
+                </List>
             </View>
         )
     }
 
 }
 
+const mapStateToProps = state => ({
+    contatos: state.general.contatos,
+    ipServer: state.general.ipServer
+})
 
-export default Contatos
+export default connect(mapStateToProps)(Contatos)
 
 const styles = StyleSheet.create({
     container: {
