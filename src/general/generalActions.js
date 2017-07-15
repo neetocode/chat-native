@@ -3,18 +3,44 @@ import axios from 'axios'
 let ws
 
 export const conectarWs = token => {
-    return async (dispatch, state) => {
-        debugger
-        ws = new WebSocket(`ws://${state().general.ipServer}/chat?t=${token}`)
+    return (dispatch, state) => {
+        console.log('iniciando ws')
+        console.log(`ws://${state().general.ipServer}chat?t=${token}`)
+        ws = new WebSocket(`ws://${state().general.ipServer}chat?t=${token}`)
 
         ws.onopen = event => {
-            console.log(event)
-            dispatch({type:'WS_CONECTADO'})
+            dispatch({ type: 'WS_CONECTADO', payload: event.data })
         }
 
-        ws.onmessage = event => console.log(event)
+        ws.onmessage = event => {
+            const frame = JSON.parse(event.data)
+            switch (frame.type) {
+                case 'message':
+                    console.log(frame.userFrom.id)
+                    console.log(frame.message)
+                    const chats = state().general.chats
+                    //const chatsNew = { ...chats, []}
+                    //dispatch({type:'MESSAGE', payload: })
+                    break;
+                case 'system':
 
-        ws.onerror = event => console.log(event)
+                    break;
+
+                case 'authentication':
+                    
+                    break;
+                case 'users':
+                    let users = JSON.parse(frame.data)
+                    users = users.sort((a, b) => a.online ? -1 : 1)
+                    dispatch({ type: 'USERS', payload: users })
+                    break;
+            }
+
+        }
+
+        ws.onerror = event => {
+            dispatch({ type: 'WS_ERROR', payload: JSON.parse(event.data) })
+        }
 
     }
 }
@@ -31,13 +57,13 @@ export const atualizarContatos = () => {
     }
 }
 
-export const mensagemRecebida = () =>{
+export const mensagemRecebida = () => {
     return {
         type: 'MENSAGEM_RECEBIDA'
     }
 }
 
-export const enviarMensagem = ({mensagem, destino}) =>{
+export const enviarMensagem = ({ mensagem, destino }) => {
     return {
         type: 'MENSAGEM_ENVIADA'
     }

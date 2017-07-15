@@ -17,6 +17,7 @@ class Contatos extends React.Component {
 
     render() {
         const { contatos, ipServer } = this.props
+        console.log(contatos)
         return (
             <View>
                 <List>
@@ -24,10 +25,10 @@ class Contatos extends React.Component {
                         contatos.map((contato, i) => (
                             <ListItem
                                 roundAvatar
-                                avatar={{ uri: `${ipServer}/faces/resources/user.png` }}
+                                avatar={{ uri: `http://${ipServer}/faces/resources/user.png` }}
                                 key={i}
-                                title={contato.nome}
-                                subtitle={contato.online ? "Online" : ""}
+                                title={contato.username}
+                                subtitle={contato.online ? "Online" : null}
                                 subtitleStyle={contato.online ? {color:'green'} : {}}
                                 hideChevron={true}
                                 onPress={()=>this.goChat(contato)}

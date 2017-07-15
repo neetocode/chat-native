@@ -1,5 +1,5 @@
 import React from 'react'
-import { StyleSheet, View, Text } from 'react-native'
+import { StyleSheet, View, Text, ActivityIndicator } from 'react-native'
 import { FormLabel, FormInput, Button, Icon, FormValidationMessage } from 'react-native-elements'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
@@ -10,8 +10,8 @@ import { setToken } from './loginActions'
 
 class Login extends React.Component {
     state = {
-        login: '',
-        senha: '',
+        login: 'Miguel Neto',
+        senha: '1234',
         loginIncorreto: false,
         loading: false
     }
@@ -27,15 +27,13 @@ class Login extends React.Component {
     async sendLogin() {
         const { navigation: { navigate }, setToken, ipServer } = this.props
         const { login, senha } = this.state
-        debugger
         try {
             this.setState({
                 loginIncorreto: false,
                 loading: true
             })
-            const result = await axios.post(`${ipServer}/webresources/login`, { usuario:login, senha })
-            console.log(`${ipServer}/webresources/login`)
-            debugger
+            const result = await axios.post(`http://${ipServer}webresources/login`, { nome: login, senha })
+
             if (result.r) {
                 setToken(result.data.token)
                 navigate('mainFlux')
@@ -47,11 +45,15 @@ class Login extends React.Component {
                 })
             }
         } catch (ex) {
+            this.setState({
+                loading: false
+            })
             console.log(ex)
         }
     }
 
     render() {
+        const { loading, loginIncorreto, senha, login } = this.state
         return (
             <View style={styles.container}>
                 <Icon name="chat" iconStyle={styles.iconChat} />
@@ -59,19 +61,44 @@ class Login extends React.Component {
 
                 <View style={styles.containerInputs}>
                     <FormLabel>Login</FormLabel>
-                    <FormInput containerStyle={{}} multiline={true} placeholder="Digite seu login" onChangeText={this.alterLogin.bind(this)} />
+                    <FormInput
+                        containerStyle={{}}
+                        multiline={true}
+                        placeholder="Digite seu login"
+                        onChangeText={this.alterLogin.bind(this)}
+                        value={login}
+                        editable={!loading}
+                    />
 
                     <FormLabel>Senha</FormLabel>
-                    <FormInput multiline={false} placeholder="Digite sua senha" onChangeText={this.alterSenha.bind(this)} secureTextEntry={true} />
-                    <FormValidationMessage labelStyle={{ textAlign: 'center' }}>Login ou senha inválida</FormValidationMessage>
-
-                    <Button
-                        style={{ marginTop: 20 }}
-                        iconRight
-                        icon={{ name: 'send' }}
-                        title='ENTRAR'
-                        onPress={this.sendLogin.bind(this)}
+                    <FormInput
+                        multiline={false}
+                        placeholder="Digite sua senha"
+                        onChangeText={this.alterSenha.bind(this)}
+                        secureTextEntry={true}
+                        value={senha}
+                        editable={!loading}
                     />
+                    {loginIncorreto && !loading ?
+                        <FormValidationMessage labelStyle={{ textAlign: 'center' }}>Login ou senha inválida</FormValidationMessage>
+                        :
+                        null
+                    }
+
+                    { !loading ?
+                        <Button
+                            style={{ marginTop: 20 }}
+                            iconRight
+                            icon={{ name: 'send' }}
+                            title='ENTRAR'
+                            onPress={this.sendLogin.bind(this)}
+                        />
+                        :
+                        <ActivityIndicator
+                            animating={true}
+                            style={{marginTop:20}}
+                        />
+                    }
                 </View>
             </View>
         )
