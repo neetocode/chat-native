@@ -17,7 +17,6 @@ class Contatos extends React.Component {
 
     render() {
         const { contatos, ipServer } = this.props
-        console.log(contatos)
         return (
             <View>
                 <List>

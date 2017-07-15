@@ -9,7 +9,8 @@ const INITAL_STATE = {
 
 export default (state = INITAL_STATE, action) => {
     switch (action.type) {
-        case 'MESSAGE':
+        case 'MESSAGE_RECEIVED':
+            
             return { ...state, chats: action.payload }
         case 'SYSTEM':
             return { ...state, chats: action.payload }
@@ -31,12 +32,7 @@ export default (state = INITAL_STATE, action) => {
             console.log('WS_ERROR')
             console.log(action.payload)
             return { ...state }
-        case 'CONTATOS_FETCHED':
-            return { ...state }
-        case 'MENSAGEM_RECEBIDA':
-            return { ...state }
         case 'SET_TOKEN':
-            console.log('SET_TOKEN')
             return { ...state, token: action.payload }
 
 

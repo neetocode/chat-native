@@ -10,6 +10,8 @@ import promise from 'redux-promise'
 
 import reducers from './src/main/reducers'
 
+
+
 const store = applyMiddleware(thunk, promise)(createStore)(reducers)
 
 axios.interceptors.response.use(function (response) {
