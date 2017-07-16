@@ -27,6 +27,7 @@ class Login extends React.Component {
     async sendLogin() {
         const { navigation: { navigate }, setToken, ipServer } = this.props
         const { login, senha } = this.state
+        debugger
         try {
             this.setState({
                 loginIncorreto: false,
@@ -36,7 +37,13 @@ class Login extends React.Component {
 
             if (result.r) {
                 setToken(result.data.token)
+                
                 navigate('mainFlux')
+                this.setState({
+                    loginIncorreto: false,
+                    senha: '',
+                    loading: false
+                })
             } else {
                 this.setState({
                     loginIncorreto: true,

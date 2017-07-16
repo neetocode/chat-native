@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-import { conectarWs } from './../general/generalActions'
+import { desconectaWs, conectarWs } from './../general/generalActions'
 
 
 export const setToken = (token) => {
@@ -9,4 +9,12 @@ export const setToken = (token) => {
         dispatch(conectarWs(token))
     }
 
+}
+
+
+export const sair = () => {
+    return dispatch => {
+        dispatch({type:'SET_TOKEN', payload: null})
+        dispatch(desconectaWs())
+    }
 }

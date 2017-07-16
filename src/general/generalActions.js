@@ -2,6 +2,13 @@ import axios from 'axios'
 
 let ws
 
+export const desconectaWs = () =>{
+    return dispacth =>{
+        
+        if(ws) ws.close()
+    }
+}
+
 export const conectarWs = token => {
     return (dispatch, state) => {
         ws = new WebSocket(`ws://${state().general.ipServer}chat?t=${token}`)
@@ -66,7 +73,14 @@ export const conectarWs = token => {
 // }
 
 export const enviarMensagem = ({ mensagem, destino }) => {
-    return {
-        type: 'MENSAGEM_ENVIADA'
+    return dispatch =>{
+
+        const frameSend = {
+            message: mensagem,
+            to: destino,
+            type: 'message'
+        }
+        ws.send(JSON.stringify(frameSend))
+        dispatch({type: 'MENSAGEM_ENVIADA', payload: frameSend})
     }
 }
