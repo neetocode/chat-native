@@ -1,7 +1,14 @@
 import axios from 'axios'
+import { AsyncStorage } from 'react-native'
 
 let ws
 
+export const alterIpServer = (ipServer) =>{
+    return async dispatch =>{
+        dispatch({type: 'ALTER_IPSERVER', payload: ipServer})
+        await AsyncStorage.setItem('ipServer', ipServer)
+    }
+}
 export const desconectaWs = () =>{
     return dispacth =>{
         
@@ -32,6 +39,7 @@ export const conectarWs = token => {
                     const newChat = [].concat(chat)
                     const newChats = { ...chats, [frame.userFrom.id]: newChat }
                     dispatch({ type: 'MESSAGE_RECEIVED', payload: newChats })
+
                     break;
                 case 'system':
                     
@@ -60,17 +68,6 @@ export const conectarWs = token => {
     }
 }
 
-// export const atualizarContatos = () => {
-//     return {
-//         type: 'CONTATOS_FETCHED',
-//         payload: [
-//             { "online": true, "id": "1", "username": "Miguel Neto" },
-//             { "online": false, "id": "2", "username": "Tiago Oliveira" },
-//             { "online": false, "id": "3", "username": "Jorge Rodrigues" },
-//             { "online": false, "id": "4", "username": "George Leite" }
-//         ]
-//     }
-// }
 
 export const enviarMensagem = ({ mensagem, destino }) => {
     return dispatch =>{

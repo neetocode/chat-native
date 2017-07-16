@@ -8,21 +8,25 @@ import { bindActionCreators } from 'redux'
 import { sair } from './../login/loginActions'
 
 class Contatos extends React.Component {
-    static navigationOptions = ({ navigation }) => {
+    // static navigationOptions = ({ navigation }) => {
 
-        const { params } = navigation.state
-        return {
-            headerRight: <Text style={{ color: 'red', paddingRight: 10 }} onPress={() => params.sair() }>Sair</Text>,
-            headerLeft: <Icon name='settings' style={{ paddingLeft: 10 }} onPress={() => params.goSettings() } />
-        };
-    };
+    //     const { params } = navigation.state
+    //     return {
+    //         headerRight: <Text style={{ color: 'red', paddingRight: 10 }} onPress={() => params.sair() }>Sair</Text>,
+    //         headerLeft: <Icon name='settings' style={{ paddingLeft: 10 }} onPress={() => params.goSettings() } />
+    //     };
+    // };
 
-    componentDidMount() {
-        this.props.navigation.setParams({
-            goSettings: this.goSettings.bind(this),
-            sair: this.sair.bind(this)
-        });
+    static navigationOptions = {
+        title: 'Contatos'
     }
+
+    // componentDidMount() {
+    //     this.props.navigation.setParams({
+    //         goSettings: this.goSettings.bind(this),
+    //         sair: this.sair.bind(this)
+    //     });
+    // }
 
     goSettings() {
         const { navigate } = this.props.navigation
@@ -60,7 +64,16 @@ class Contatos extends React.Component {
                     }
                 </List>
 
-                {/* <Button title="Sair" style={{ marginTop: 10 }} onPress={() => this.sair()} /> */}
+                <Button
+                    title="Configuracoes"
+                    style={{ marginTop: 10 }}
+                    buttonStyle={{backgroundColor:'#4E342E'}}
+                    onPress={() => this.goSettings()} />
+                <Button
+                    title="Sair"
+                    style={{ marginTop: 10 }}
+                    buttonStyle={{backgroundColor:'#B71C1C'}}
+                    onPress={() => this.sair()} />
             </ScrollView>
         )
     }

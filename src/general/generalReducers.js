@@ -9,8 +9,10 @@ const INITAL_STATE = {
 
 export default (state = INITAL_STATE, action) => {
     switch (action.type) {
+        case 'ALTER_IPSERVER':
+            return { ...state, ipServer: action.payload }
+
         case 'MESSAGE_RECEIVED':
-            
             return { ...state, chats: action.payload }
         case 'SYSTEM':
             return { ...state, chats: action.payload }

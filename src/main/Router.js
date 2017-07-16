@@ -8,9 +8,10 @@ import Configuracao from './../configuracao/Configuracao'
 
 const Router = TabNavigator({
     login: { screen: Login },
+    configuracao: { screen: Configuracao },
     mainFlux: {
         screen: StackNavigator({
-            // contatos: { screen: Contatos },
+            contatos: { screen: Contatos },
             chat: { screen: Chat },
             configuracao: { screen: Configuracao }
         })

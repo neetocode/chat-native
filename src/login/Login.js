@@ -1,12 +1,12 @@
 import React from 'react'
-import { StyleSheet, View, Text, ActivityIndicator } from 'react-native'
+import { StyleSheet, View, Text, ActivityIndicator, AsyncStorage } from 'react-native'
 import { FormLabel, FormInput, Button, Icon, FormValidationMessage } from 'react-native-elements'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import axios from 'axios'
 
 import { setToken } from './loginActions'
-
+import { alterIpServer } from './../general/generalActions'
 
 class Login extends React.Component {
     state = {
@@ -16,12 +16,23 @@ class Login extends React.Component {
         loading: false
     }
 
+    async componentDidMount(){
+        const ipServer = await AsyncStorage.getItem('ipServer') || ''
+        console.log(ipServer)
+        this.props.alterIpServer(ipServer)
+    }
+
     alterLogin(login) {
         this.setState({ login })
     }
 
     alterSenha(senha) {
         this.setState({ senha })
+    }
+
+    goSettings() {
+        const { navigate } = this.props.navigation
+        navigate('configuracao')
     }
 
     async sendLogin() {
@@ -106,6 +117,12 @@ class Login extends React.Component {
                             style={{marginTop:20}}
                         />
                     }
+
+                    <Button
+                    title="Configuracoes"
+                    style={{ marginTop: 10 }}
+                    buttonStyle={{backgroundColor:'#4E342E'}}
+                    onPress={() => this.goSettings()} />
                 </View>
             </View>
         )
@@ -113,7 +130,7 @@ class Login extends React.Component {
 
 }
 
-const mapDispatchToProps = dispatch => bindActionCreators({ setToken }, dispatch)
+const mapDispatchToProps = dispatch => bindActionCreators({ setToken, alterIpServer }, dispatch)
 const mapStateToProps = state => ({
     ipServer: state.general.ipServer
 })

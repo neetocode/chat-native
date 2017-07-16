@@ -8,10 +8,12 @@ import { Icon } from 'react-native-elements'
 import { enviarMensagem } from './../general/generalActions'
 
 class Chat extends React.Component {
-    static navigationOptions = ({ navigation, screenProps }) => ({
-        title: navigation.state.params.contato.username || '',
-
-    })
+    static navigationOptions = ({ navigation, screenProps }) => {
+        const params = navigation.state.params || {}
+        return {
+            title: params.contato.username || ''
+        }
+    }
 
     state = {
         msg: '',
@@ -46,8 +48,8 @@ class Chat extends React.Component {
 
     render() {
         const { chats, navigation } = this.props
-        const contato = navigation.state.params.contato
-        const mensagens = chats[contato.id] || []
+        const params = navigation.state.params || {}
+        const mensagens = chats[params.contato.id || 0] || []
         return (
             <KeyboardAwareScrollView style={styles.container}>
                 <View style={styles.scrollViewContainer}>
