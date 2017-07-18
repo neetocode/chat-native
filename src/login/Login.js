@@ -1,5 +1,5 @@
 import React from 'react'
-import { StyleSheet, View, Text, ActivityIndicator, AsyncStorage } from 'react-native'
+import { StyleSheet, View, Text, ActivityIndicator, AsyncStorage, ScrollView } from 'react-native'
 import { FormLabel, FormInput, Button, Icon, FormValidationMessage } from 'react-native-elements'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
@@ -13,7 +13,9 @@ class Login extends React.Component {
         login: 'Miguel Neto',
         senha: '1234',
         loginIncorreto: false,
-        loading: false
+        loading: false,
+        error:'',
+        errorResume: ''
     }
 
     async componentDidMount(){
@@ -32,7 +34,7 @@ class Login extends React.Component {
 
     goSettings() {
         const { navigate } = this.props.navigation
-        navigate('configuracao')
+        navigate('configuracao',{inicio:true})
     }
 
     async sendLogin() {
@@ -42,9 +44,11 @@ class Login extends React.Component {
         try {
             this.setState({
                 loginIncorreto: false,
-                loading: true
+                loading: true,
+                error: '',
+                errorResume:''
             })
-            const result = await axios.post(`http://${ipServer}webresources/login`, { nome: login, senha })
+            const result = await axios.post(`http://${ipServer}webresources/login`, { nome: login, senha },{timeout: 10000})
 
             if (result.r) {
                 setToken(result.data.token)
@@ -64,16 +68,19 @@ class Login extends React.Component {
             }
         } catch (ex) {
             this.setState({
-                loading: false
+                loading: false,
+                error: JSON.stringify(ex.request),
+                errorResume: ex.request._response
             })
-            console.log(ex)
+            console.log(JSON.stringify(ex.request))
         }
     }
 
     render() {
-        const { loading, loginIncorreto, senha, login } = this.state
+        const { loading, loginIncorreto, senha, login, error, errorResume } = this.state
+        const { ipServer } = this.props
         return (
-            <View style={styles.container}>
+            <ScrollView contentContainerStyle={styles.container}>
                 <Icon name="chat" iconStyle={styles.iconChat} />
 
 
@@ -123,8 +130,21 @@ class Login extends React.Component {
                     style={{ marginTop: 10 }}
                     buttonStyle={{backgroundColor:'#4E342E'}}
                     onPress={() => this.goSettings()} />
+
+                    <Text style={styles.ipServer}>{ipServer}</Text>
+
+                    {
+                        error !== ''?
+                        (
+                            <View>
+                                <Text style={styles.errorResume}>{errorResume}</Text>
+                                <Text style={styles.error}>{error}</Text>
+                            </View>
+                        ):
+                        null
+                    }
                 </View>
-            </View>
+            </ScrollView>
         )
     }
 
@@ -153,5 +173,21 @@ const styles = StyleSheet.create({
         color: 'gray',
         fontSize: 36,
         marginBottom: 10
+    },
+    ipServer:{
+        marginTop: 15,
+        textAlign:'center',
+        color:'gray'
+    },
+    error:{
+        marginTop:5,
+        textAlign:'center',
+        fontSize:12,
+        color:'#FFCDD2'
+    },
+    errorResume:{
+        marginTop:5,
+        textAlign:'center',
+        fontSize:12,
     }
 })

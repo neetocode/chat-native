@@ -17,7 +17,11 @@
       "assetExts": ["ttf", "mp4"]
     },
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": false,
+      "bundleIdentifier": "com.ifs.web.miguel.trabalhoweb"
+    },
+    "android": {
+      "package": "com.ifs.web.miguel.trabalhoweb"
     }
   }
 }

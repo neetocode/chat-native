@@ -11,6 +11,11 @@ class Configuracao extends React.Component {
         ipServer: this.props.ipServer
     }
     render() {
+        debugger
+        let isInicio = false
+        if(this.props.navigation.state.params){
+            if(this.props.navigation.state.params.inicio) isInicio = true
+        }
         return (
             <View style={styles.container}>
                 <FormLabel>IP do servidor</FormLabel>
@@ -24,6 +29,13 @@ class Configuracao extends React.Component {
                     disabled={this.props.ipServer === this.state.ipServer}
                     onPress={()=> this.props.alterIpServer(this.state.ipServer)}
                 />
+                {isInicio?
+                <Button
+                    title='Voltar'
+                    onPress={()=> this.props.navigation.navigate('login')}
+                />
+                :
+                null}
             </View>
         )
     }
